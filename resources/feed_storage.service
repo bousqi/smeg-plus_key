@@ -1,1 +1,12 @@
-/usr/local/src/zerow_feed/feed_storage.service
+[Unit]
+Description=SMEG Feed Service
+After=myusbgadget.service
+ 
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/feed_storage.sh
+User=nico
+ 
+[Install]
+WantedBy=sysinit.target
