@@ -85,6 +85,6 @@ The on device build procedure downloads the current running kernel sources, enab
 More details in [build_eem.sh](./build_eem.sh)
 
 ## Links
-https://github.com/Mwyann/psakey
-https://github.com/notro/rpi-source/wiki
-https://wiki.tizen.org/USB/Linux_USB_Layers/Configfs_Composite_Gadget/Usage_eq._to_g_multi.ko
+* https://github.com/Mwyann/psakey
+* https://github.com/notro/rpi-source/wiki
+* https://wiki.tizen.org/USB/Linux_USB_Layers/Configfs_Composite_Gadget/Usage_eq._to_g_multi.ko
