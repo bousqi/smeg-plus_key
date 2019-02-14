@@ -7,7 +7,7 @@ SMEG+ Key embeds :
 * Wifi Hotspot (TODO)
 
 
-This project is based on the huge work acheived by @MWyann on PSAKey
+This project is based on the huge work acheived by [@MWyann](https://github.com/Mwyann) on PSAKey
 
 Quick install from scratch
 ==========================
@@ -84,3 +84,7 @@ If the usb_f_eem module is missing for your kernel, you can automatically build 
 The on device build procedure downloads the current running kernel sources, enables EEM features, build it and installs it.
 More details in [build_eem.sh](./build_eem.sh)
 
+## Links
+https://github.com/Mwyann/psakey
+https://github.com/notro/rpi-source/wiki
+https://wiki.tizen.org/USB/Linux_USB_Layers/Configfs_Composite_Gadget/Usage_eq._to_g_multi.ko
