@@ -20,7 +20,7 @@ function mount_dirs {
 	mount /media/rpi
 	echo "Mounting local MassStorage"
 	sudo umount -f /media/c4pii
-	fsck -y /dev/mmcblk0p3 
+	sudo fsck -y /dev/mmcblk0p3 
 	mount /media/c4pii
 }
 
@@ -51,7 +51,7 @@ function feed_maps {
 	rsync -avPz --append-verify -e "ssh -p 18622" nico@bousquet.freeboxos.fr:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
 	# rsync -avP /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
 	STATUS=$?
-	echo "ERROR : rsync executed with $STATUS code"
+	echo "LOG : rsync executed with $STATUS code"
 	# if [ "$?" -eq "0" ]; then
 	# 	STATUS=0/
 	# 	# error during rsync... connection lost maybe...
