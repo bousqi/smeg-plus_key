@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AGAIN=1
+STATUS=1
 HOST=bousquet.freeboxos.fr
 
 function wait_server {
@@ -14,13 +14,21 @@ function wait_server {
 	printf "\n%s\n"  "Server is back online"
 }
 
-function mount_server {
+function mount_dirs {
 	echo "Mounting remote"
 	sudo umount -f /media/rpi
 	mount /media/rpi
 	echo "Mounting local MassStorage"
 	sudo umount -f /media/c4pii
+	fsck -y /dev/mmcblk0p3 
 	mount /media/c4pii
+}
+
+function mount_RO_dirs {
+	echo "Unmounting remote"
+	sudo umount -f /media/rpi
+	echo "Remounting local MassStorage"
+	sudo mount -o remount,ro /media/c4pii 
 }
 
 function check_media {
@@ -40,35 +48,46 @@ function check_delta {
 
 function feed_maps {
 	timeout 8 /usr/local/bin/notify "RPI-ZeroW" "Starting to feed..."
-	rsync -avP /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
-	AGAIN=$?
+	rsync -avPz --append-verify -e "ssh -p 18622" nico@bousquet.freeboxos.fr:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
+	# rsync -avP /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
+	STATUS=$?
+	echo "ERROR : rsync executed with $STATUS code"
 	# if [ "$?" -eq "0" ]; then
-	# 	AGAIN=0
-	# else
+	# 	STATUS=0/
 	# 	# error during rsync... connection lost maybe...
 	# 	# retry in few sec
 	# 	sleep 5
-	# 	AGAIN=1
+	# 	STATUS=1
 	# fi
 }
 
 check_media
 
-while [ ! "$AGAIN" -eq "0" ]; do
+while [ 1 ]; do
 	wait_server
-	mount_server
+	mount_dirs
 	check_delta
 
 	if [ "$UPDATE" -eq "1" ]; then
 		sudo systemctl stop myusbgadget
 		feed_maps
+		if [ "$STATUS" -eq "0" ]; then
+			mount_RO_dirs
+
+			echo "Updates done"
+			/usr/local/bin/notify "RPI-ZeroW" "Done !"
+
+			# USB is ready, restoring USB Gadget
+			sudo systemctl restart myusbgadget
+
+			sleep 2h
+		else
+			sleep 2m
+		fi
 	else
 		echo "No updates to perform"
-		exit 0
+		# exit 0
+		sleep 5m
 	fi
 done
 
-echo "Updates done"
-/usr/local/bin/notify "RPI-ZeroW" "Done !"
-# USB is ready, restoring USB Gadget
-sudo systemctl restart myusbgadget
