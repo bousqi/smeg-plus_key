@@ -20,7 +20,7 @@ function mount_dirs {
 	mount /media/rpi
 	echo "Mounting local MassStorage"
 	sudo umount -f /media/c4pii
-	sudo fsck -y /dev/mmcblk0p3 
+	sudo fsck -y /dev/mmcblk0p3
 	mount /media/c4pii
 }
 
@@ -28,7 +28,7 @@ function mount_RO_dirs {
 	echo "Unmounting remote"
 	sudo umount -f /media/rpi
 	echo "Remounting local MassStorage"
-	sudo mount -o remount,ro /media/c4pii 
+	sudo mount -o remount,ro /media/c4pii
 }
 
 function check_media {
@@ -48,7 +48,9 @@ function check_delta {
 
 function feed_maps {
 	timeout 8 /usr/local/bin/notify "RPI-ZeroW" "Starting to feed..."
-	rsync -avPz --append-verify -e "ssh -p 18622" nico@bousquet.freeboxos.fr:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
+	rsync -avPzcv --stats --delete -e "ssh -p 18622" nico@bousquet.freeboxos.fr:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/
+	sync
+
 	# rsync -avP /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
 	STATUS=$?
 	echo "LOG : rsync executed with $STATUS code"
@@ -63,31 +65,24 @@ function feed_maps {
 
 check_media
 
-while [ 1 ]; do
-	wait_server
-	mount_dirs
-	check_delta
+wait_server
+mount_dirs
+check_delta
 
-	if [ "$UPDATE" -eq "1" ]; then
-		sudo systemctl stop myusbgadget
-		feed_maps
-		if [ "$STATUS" -eq "0" ]; then
-			mount_RO_dirs
+if [ "$UPDATE" -eq "1" ]; then
+	sudo systemctl stop myusbgadget
+	feed_maps
+	if [ "$STATUS" -eq "0" ]; then
+		mount_RO_dirs
 
-			echo "Updates done"
-			/usr/local/bin/notify "RPI-ZeroW" "Done !"
+		echo "Updates done"
+		/usr/local/bin/notify "RPI-ZeroW" "Done !"
 
-			# USB is ready, restoring USB Gadget
-			sudo systemctl restart myusbgadget
-
-			sleep 2h
-		else
-			sleep 2m
-		fi
-	else
-		echo "No updates to perform"
-		# exit 0
-		sleep 5m
+		# USB is ready, restoring USB Gadget
+		sudo systemctl restart myusbgadget
 	fi
-done
+else
+	echo "No updates to perform"
+	# exit 0
+fi
 

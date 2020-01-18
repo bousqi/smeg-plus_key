@@ -1,12 +1,14 @@
 [Unit]
 Description=SMEG Feed Service
-After=myusbgadget.service
+Wants=network-online.target
+#After=myusbgadget.service network-online.target
+After=network-online.target
  
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=single
+RemainAfterExit=no
 ExecStart=/usr/local/bin/feed_storage.sh
 User=nico
  
 [Install]
-WantedBy=sysinit.target
+WantedBy=network-online.target
