@@ -1,10 +1,10 @@
 #!/bin/bash
 
 STATUS=1
-HOST=bousquet.freeboxos.fr
+source storage.config
 
 function wait_server {
-	printf "%s\n" "Waiting for [bousquet.freeboxos.fr]"
+	printf "%s\n" "Waiting for [$HOST]"
 #	while ! timeout 0.2 ping -c 1 -n $HOST &> /dev/null
 	while ! ping -c 1 -n $HOST &> /dev/null
 	do
@@ -48,7 +48,7 @@ function check_delta {
 
 function feed_maps {
 	timeout 8 /usr/local/bin/notify "RPI-ZeroW" "Starting to feed..."
-	rsync -avPzcv --stats --delete -e "ssh -p 18622" nico@bousquet.freeboxos.fr:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/
+	rsync -avPzcv --stats --delete -e "ssh -p $PORT" $USER@$HOST:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/
 	sync
 
 	# rsync -avP /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
