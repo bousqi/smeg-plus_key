@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt install bison flex libssl-dev
+
 # check rpi-source
 if [ -z "$(which rpi-source)" ]; then
 	sudo apt install bc
