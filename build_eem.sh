@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt install bison flex libssl-dev
+sudo apt install bison flex libssl-dev ssl-cert
 
 # check rpi-source
 if [ -z "$(which rpi-source)" ]; then
