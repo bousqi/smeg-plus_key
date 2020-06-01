@@ -48,7 +48,7 @@ function check_delta {
 
 function feed_maps {
 	timeout 8 /usr/local/bin/notify "RPI-ZeroW" "Starting to feed..."
-	rsync -avPzcv --stats --delete -e "ssh -p $PORT" $USER@$HOST:/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/
+	rsync -avPzcv --stats --delete -e "ssh -p $PORT" $USER@$HOST:/mnt/papin.lan/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/
 	sync
 
 	# rsync -avP /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/ /media/c4pii/ --delete
