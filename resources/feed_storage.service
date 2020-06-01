@@ -5,7 +5,7 @@ Wants=network-online.target
 After=network-online.target
  
 [Service]
-Type=single
+Type=simple
 RemainAfterExit=no
 ExecStart=/usr/local/bin/feed_storage.sh
 User=nico
