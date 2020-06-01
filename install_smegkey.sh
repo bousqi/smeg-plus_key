@@ -21,8 +21,12 @@ chmod +x /usr/local/bin/myusbgadget
 chmod +x /usr/local/bin/usbgadget_enable.sh
 chmod +x /usr/local/bin/usbgadget_disable.sh
 chmod +x /usr/local/bin/bridge_enable.sh
+
 cp resources/myusbgadget.service /usr/lib/systemd/system/
-systemctl enable myusbgadget
+cp resources/feed_storage.service /usr/lib/systemd/system/
+systemctl daemon-reload
+systemctl enable myusbgadget.service
+systemctl enable feed_storage.service
 
 echo "Installing network related files..."
 # USB gadget configuration file
@@ -32,14 +36,19 @@ cat resources/dhcpcd.conf >> /etc/dhcpcd.conf
 echo "Setting up the read-only filesystem..."
 # We need to setup filesystems as readonly because the RPi will be shut down without notice
 cp /etc/fstab /etc/fstab.bak
-sed 's/^\(PARTUUID.*defaults\)/\1,ro/' < /etc/fstab.bak > /etc/fstab
+sed 's/^\(PARTUUID.*defaults\)/\1,ro/g' -i /etc/fstab
+sed 's/\(\/boot.*ro\)/\1,noauto/' -i /etc/fstab
 # Add some folders as tmpfs (logs, tmp...)
 cat resources/fstab.tmp >> /etc/fstab
 # this remount script can be called to mount root filesystem as read-write again
-cp resources/remount /usr/sbin/remount
-chmod +x /usr/sbin/remount
+cp resources/remount /usr/bin/remount
+chmod +x /usr/bin/remount
 mv /etc/resolv.conf /tmp/resolv.conf
 ln -s /tmp/resolv.conf /etc/resolv.conf
 
-echo "Installation is done! You can reboot to apply the configuration,"
-echo "then plug the key into your car's USB port and navigate to the Internet application."
+echo "Installation is done! One last step, create /etc/feed_storage.config with :"
+echo "HOST=...."
+echo "PORT=...."
+echo "USER=...."
+echo 
+echo "Next, you can reboot to apply the configuration."
