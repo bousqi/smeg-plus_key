@@ -1,7 +1,7 @@
 #!/bin/bash
 
 STATUS=1
-source storage.config
+source /etc/feed_storage.config
 
 function wait_server {
 	printf "%s\n" "Waiting for [$HOST]"
