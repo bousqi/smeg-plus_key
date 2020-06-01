@@ -39,7 +39,7 @@ function check_media {
 
 function check_delta {
 	echo "Checking for upgrade"
-	if [ -d /media/rpi/media/freebox/eSata/SMEG+/_remote_c4/  ]; then
+	if [ -d /media/rpi/mnt/papin.lan/freebox/eSata/SMEG+/_remote_c4/  ]; then
 		UPDATE="1"
 	else
 		UPDATE="0"
