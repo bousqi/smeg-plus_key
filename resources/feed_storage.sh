@@ -11,6 +11,7 @@ function wait_server {
 		#printf "%c" "."
 		sleep 5
 	done
+	/usr/local/bin/notify "RPI-ZeroW" "Online"
 	printf "\n%s\n"  "Server is back online"
 }
 
@@ -83,6 +84,7 @@ if [ "$UPDATE" -eq "1" ]; then
 	fi
 else
 	echo "No updates to perform"
+	/usr/local/bin/notify "RPI-ZeroW" "No Updates..."
 	# exit 0
 fi
 
